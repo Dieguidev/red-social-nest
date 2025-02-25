@@ -4,6 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import { join } from 'path';
 import * as morgan from 'morgan';
+import { envs } from './config/envs';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -20,6 +21,6 @@ async function bootstrap() {
 
   app.use(morgan('combined'));
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(envs.port || 3000);
 }
 bootstrap();
