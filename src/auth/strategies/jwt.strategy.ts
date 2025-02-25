@@ -32,7 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) throw new UnauthorizedException('Token no válido');
     // if (!user.roles.length)
     //   throw new UnauthorizedException('El usuario no tiene roles asignados');
-    if(user.role) throw new UnauthorizedException('El usuario no tiene roles asignados');
+    if(!user.role) throw new UnauthorizedException('El usuario no tiene roles asignados');
     return user;
   }
 }

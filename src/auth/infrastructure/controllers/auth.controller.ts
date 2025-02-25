@@ -1,8 +1,11 @@
-import { Controller, Post, Body, UnauthorizedException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException, InternalServerErrorException, Get, Param } from '@nestjs/common';
 import { AuthService } from '../../application/service/auth.service';
 
 import { CreateUserDto } from '../../application/dto/create-user.dto';
 import { LoginDto } from '../../application/dto/login-dto';
+import { IdValidationPipe } from 'src/common/pipes/id-validation.pipe';
+import { ValidRoles } from 'src/auth/interfaces';
+import { Auth } from 'src/auth/decorators';
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +31,17 @@ export class AuthController {
       return this.authService.register(dto);
     } catch (error) {
       throw new InternalServerErrorException()
+    }
+  }
+
+  @Get('/profile/:id')
+  @Auth(ValidRoles.user)
+  async profile(@Param('id', IdValidationPipe) id: string) {
+    try {
+      return this.authService.profile(+id);
+    } catch (error) {
+      throw new InternalServerErrorException()
+
     }
   }
 }

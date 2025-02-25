@@ -45,7 +45,7 @@ export class PrismaAuthRepository implements AuthRepository {
       where: { id },
       // include: { roles: { include: { role: true } } },
     });
-    return this.mapUser(user);
+    return user;
   }
 
   private mapUser(user: any): User | null {

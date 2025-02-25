@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import * as bcrypt from 'bcrypt';
@@ -46,9 +46,18 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const payload = { id: user.id }; // Solo el ID del usuario en el JWT
+    const payload = { id: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async profile(id: number) {
+    const user = await this.authRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 }
