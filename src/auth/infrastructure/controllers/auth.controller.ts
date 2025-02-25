@@ -1,4 +1,12 @@
-import { Controller, Post, Body, UnauthorizedException, InternalServerErrorException, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UnauthorizedException,
+  InternalServerErrorException,
+  Get,
+  Param,
+} from '@nestjs/common';
 import { AuthService } from '../../application/service/auth.service';
 
 import { CreateUserDto } from '../../application/dto/create-user.dto';
@@ -13,11 +21,8 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    const {email,password} = loginDto;
-    const user = await this.authService.validateUser(
-      email,
-      password,
-    );
+    const { email, password } = loginDto;
+    const user = await this.authService.validateUser(email, password);
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
@@ -27,10 +32,9 @@ export class AuthController {
   @Post('register')
   async register(@Body() dto: CreateUserDto) {
     try {
-
       return this.authService.register(dto);
     } catch (error) {
-      throw new InternalServerErrorException()
+      throw new InternalServerErrorException();
     }
   }
 
@@ -38,10 +42,12 @@ export class AuthController {
   @Auth(ValidRoles.user)
   async profile(@Param('id', IdValidationPipe) id: string) {
     try {
-      return this.authService.profile(+id);
+      return {
+        status: 'success',
+        user: this.authService.profile(+id),
+      };
     } catch (error) {
-      throw new InternalServerErrorException()
-
+      throw new InternalServerErrorException();
     }
   }
 }
