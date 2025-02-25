@@ -14,42 +14,44 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  name     String?
-  nick     String
+  id       Int    @id @default(autoincrement())
+  name     String
+  surname  String
+  nick     String @unique
+  email    String @unique
   password String
-  role     String
-  image    String?
+  role     String @default("role_user")
+  image    String @default("default.png")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Publication Publication[]
-  followers   Follow[]      @relation("FollowedBy")
-  following   Follow[]      @relation("Following")
+  // Publication Publication[]
+  // followers   Follow[]      @relation("FollowedBy")
+  // following   Follow[]      @relation("Following")
 }
 
-model Publication {
-  id   Int    @id @default(autoincrement())
-  text String
-  file String
+// model Publication {
+//   id   Int    @id @default(autoincrement())
+//   text String
+//   file String
 
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int
+//   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId Int
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
 
-model Follow {
-  id Int @id @default(autoincrement())
+// model Follow {
+//   id Int @id @default(autoincrement())
 
-  userFollower   User @relation("FollowedBy", fields: [userFollowerId], references: [id])
-  userFollowerId Int
+//   userFollower   User @relation("FollowedBy", fields: [userFollowerId], references: [id])
+//   userFollowerId Int
 
-  userFollowing   User @relation("Following", fields: [userFollowingId], references: [id])
-  userFollowingId Int
+//   userFollowing   User @relation("Following", fields: [userFollowingId], references: [id])
+//   userFollowingId Int
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
