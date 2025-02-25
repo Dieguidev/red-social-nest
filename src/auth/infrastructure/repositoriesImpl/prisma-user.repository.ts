@@ -28,7 +28,7 @@ export class PrismaAuthRepository implements AuthRepository {
       where: { email },
       // include: { roles: { include: { role: true } } },
     });
-    return this.mapUser(user);
+    return user;
   }
 
   async create(CreateUserDto:CreateUserDto): Promise<User> {
