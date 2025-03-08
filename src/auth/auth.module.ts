@@ -38,6 +38,6 @@ import { PrismaAuthRepository } from './infrastructure/repositoriesImpl/prisma-u
     }),
 
   ],
-  exports:[JwtStrategy, PassportModule, JwtModule]
+  exports:[JwtStrategy, PassportModule, JwtModule, AuthService,AuthRepository]
 })
 export class AuthModule {}
