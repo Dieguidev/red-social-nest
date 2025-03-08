@@ -102,4 +102,38 @@ export class UserService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+  async uploadImage(id: number, filename: string) {
+    const imageUrl = `http://localhost:3000/uploads/avatars/${filename}`;
+
+    // Verificar si el artículo existe
+    const user  = this.findOneById(id);
+    if (!user) {
+      throw new Error('Article not found');
+    }
+
+    // Actualizar el artículo con la nueva imagen
+    const updatedArticle = await this.prisma.user.update({
+      where: { id },
+      data: { image: imageUrl },
+    });
+
+    return { message: 'Image uploaded successfully', article: updatedArticle };
+  }
+
+  async avatar(id: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: { image: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return {
+      status: 'success',
+      image: user.image,
+    };
+  }
 }
