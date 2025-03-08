@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/database/prisma/prisma.service';
@@ -73,11 +73,17 @@ export class UserService {
       },
     });
     if (existUser) {
-      throw new NotFoundException('Email or nick already exists');
+      throw new ConflictException('Email or nick already exists');
     }
 
     if (password) {
       updateUserDto.password = hashSync(password, 10);
+    }
+    if (nick) {
+      updateUserDto.nick = nick.toLowerCase();
+    }
+    if (email) {
+      updateUserDto.email = email.toLowerCase();
     }
 
     const user = await this.prisma.user.update({
@@ -85,7 +91,12 @@ export class UserService {
       data: updateUserDto,
     });
 
-    return `This action updates a #${id} user`;
+    return {
+      status: 'success',
+
+      user
+
+    };
   }
 
   remove(id: number) {
