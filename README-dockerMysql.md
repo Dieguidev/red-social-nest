@@ -36,9 +36,10 @@ docker-compose up -d
 ```
 
 ## 2️⃣ Acceder al contenedor MySQL
+Sustituye NOMBRE_DEL_CONTENEDOR con el nombre real de tu contenedor MySQL
 
 ```sh
-docker exec -it my-mysql mysql -u root -p
+docker exec -it NOMBRE_DEL_CONTENEDOR mysql -u root -p
 ```
 
 Cuando se te pida la contraseña, ingresa `rootpassword` (o la que hayas definido en el `docker-compose.yml`).
@@ -80,5 +81,5 @@ Esto sincronizará el esquema de la base de datos con tu `schema.prisma`.
 
 ---
 
-Con estos pasos, podrás configurar un nuevo contenedor MySQL y otorgar permisos manualmente a cada usuario en cada instancia. 🚀
+Con estos pasos, podrás configurar un nuevo contenedor MySQL y otorgar permisos manualmente a cada usuario en cada instancia en Linux. 🚀
 
