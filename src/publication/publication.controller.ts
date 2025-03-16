@@ -1,9 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+} from '@nestjs/common';
 import { PublicationService } from './publication.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { Auth } from 'src/auth/decorators';
 import { ValidRoles } from 'src/auth/interfaces';
+
+interface RequestWithUser extends Request {
+  user: {
+    id: number;
+    // Añade aquí otras propiedades del usuario si las necesitas
+  };
+}
 
 @Controller('publication')
 export class PublicationController {
@@ -11,8 +27,11 @@ export class PublicationController {
 
   @Post()
   @Auth(ValidRoles.user)
-  create(@Body() createPublicationDto: CreatePublicationDto) {
-    return this.publicationService.create(createPublicationDto);
+  create(
+    @Body() createPublicationDto: CreatePublicationDto,
+    @Req() req: RequestWithUser,
+  ) {
+    return this.publicationService.create(createPublicationDto, req.user.id);
   }
 
   @Get()
@@ -26,7 +45,10 @@ export class PublicationController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePublicationDto: UpdatePublicationDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updatePublicationDto: UpdatePublicationDto,
+  ) {
     return this.publicationService.update(+id, updatePublicationDto);
   }
 
