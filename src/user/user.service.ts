@@ -1,13 +1,21 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { hashSync } from 'bcrypt';
+import { FollowService } from 'src/follow/follow.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly followService: FollowService,
+  ) {}
 
   async findAll(paginationDto: PaginationDto) {
     const { limit = 10, page = 1 } = paginationDto;
@@ -53,12 +61,17 @@ export class UserService {
       },
     });
 
+    const followers = await this.followService.countAllFollowers(id);
+    const following = await this.followService.countAllFollowing(id);
+
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return {
       status: 'success',
       user,
+      followers: followers.count,
+      following: following.count,
     };
   }
 
@@ -94,8 +107,7 @@ export class UserService {
     return {
       status: 'success',
 
-      user
-
+      user,
     };
   }
 
@@ -107,7 +119,7 @@ export class UserService {
     const imageUrl = `http://localhost:3000/uploads/avatars/${filename}`;
 
     // Verificar si el artículo existe
-    const user  = this.findOneById(id);
+    const user = this.findOneById(id);
     if (!user) {
       throw new Error('Article not found');
     }

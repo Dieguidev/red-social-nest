@@ -92,6 +92,26 @@ export class FollowService {
     };
   }
 
+  async countAllFollowing(id: number) {
+    const userExists = await this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!userExists) {
+      throw new NotFoundException('User not found');
+    }
+
+    const count = await this.prisma.follow.count({
+      where: {
+        followerId: id,
+      },
+    });
+    return {
+      count,
+    };
+  }
+
   async findAllFollowers(id: number, page: number) {
     const userExists = await this.prisma.user.findUnique({
       where: { id },
@@ -115,6 +135,26 @@ export class FollowService {
     return {
       status: 'success',
       followers,
+    };
+  }
+
+  async countAllFollowers(id: number) {
+    const userExists = await this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!userExists) {
+      throw new NotFoundException('User not found');
+    }
+
+    const count = await this.prisma.follow.count({
+      where: {
+        followedId: id,
+      },
+    });
+    return {
+      count,
     };
   }
 

@@ -8,5 +8,6 @@ import { PrismaModule } from 'src/database/prisma/prisma.module';
   controllers: [FollowController],
   providers: [FollowService],
   imports: [AuthModule, PrismaModule],
+  exports: [FollowService],
 })
 export class FollowModule {}
