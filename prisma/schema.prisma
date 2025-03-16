@@ -26,23 +26,23 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Publication Publication[]
   // Relaciones para seguimiento
   followers Follow[] @relation("UserFollowers") // Usuarios que me siguen
   following Follow[] @relation("UserFollowing") // Usuarios a los que sigo
+
+  Publication Publication[]
 }
 
-// model Publication {
-//   id   Int    @id @default(autoincrement())
-//   text String
-//   file String
+model Publication {
+  id   Int     @id @default(autoincrement())
+  text String
+  file String?
 
-//   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   userId Int
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+}
 
 model Follow {
   id Int @id @default(autoincrement())

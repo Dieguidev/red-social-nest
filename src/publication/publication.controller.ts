@@ -2,12 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PublicationService } from './publication.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
+import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from 'src/auth/interfaces';
 
 @Controller('publication')
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
 
   @Post()
+  @Auth(ValidRoles.user)
   create(@Body() createPublicationDto: CreatePublicationDto) {
     return this.publicationService.create(createPublicationDto);
   }
