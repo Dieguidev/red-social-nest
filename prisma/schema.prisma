@@ -34,9 +34,10 @@ model User {
 }
 
 model Publication {
-  id   Int     @id @default(autoincrement())
-  text String
-  file String?
+  id     Int     @id @default(autoincrement())
+  text   String
+  file   String?
+  status Boolean @default(true)
 
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())

@@ -13,6 +13,7 @@ import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { Auth } from 'src/auth/decorators';
 import { ValidRoles } from 'src/auth/interfaces';
+import { IdValidationPipe } from 'src/common/pipes/id-validation.pipe';
 
 interface RequestWithUser extends Request {
   user: {
@@ -39,8 +40,9 @@ export class PublicationController {
     return this.publicationService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get('detail/:id')
+  @Auth(ValidRoles.user)
+  findOne(@Param('id', IdValidationPipe) id: string) {
     return this.publicationService.findOne(+id);
   }
 

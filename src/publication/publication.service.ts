@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { PrismaService } from 'src/database/prisma/prisma.service';
@@ -24,8 +24,20 @@ export class PublicationService {
     return `This action returns all publication`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} publication`;
+  async findOne(id: number) {
+    const publication = await this.prisma.publication.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!publication) {
+      throw new NotFoundException('Publication not found');
+    }
+    return {
+      status: 'success',
+      publication,
+    };
   }
 
   update(id: number, updatePublicationDto: UpdatePublicationDto) {
