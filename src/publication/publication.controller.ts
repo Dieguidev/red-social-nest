@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Req,
+  Query,
 } from '@nestjs/common';
 import { PublicationService } from './publication.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
@@ -14,6 +15,7 @@ import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { Auth } from 'src/auth/decorators';
 import { ValidRoles } from 'src/auth/interfaces';
 import { IdValidationPipe } from 'src/common/pipes/id-validation.pipe';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 interface RequestWithUser extends Request {
   user: {
@@ -38,6 +40,12 @@ export class PublicationController {
   @Get()
   findAll() {
     return this.publicationService.findAll();
+  }
+
+  @Get('user/:userId')
+  @Auth(ValidRoles.user)
+  findAllByUser(@Param('userId', IdValidationPipe) userId: string, @Query() paginationDto: PaginationDto) {
+    return this.publicationService.findAllByUser(+userId, paginationDto);
   }
 
   @Get('detail/:id')
