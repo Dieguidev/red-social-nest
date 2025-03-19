@@ -44,7 +44,17 @@ export class PublicationService {
     return `This action updates a #${id} publication`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} publication`;
+  async remove(id: number) {
+    await this.findOne(id);
+    const publication = await this.prisma.publication.update({
+      where: { id },
+      data: {
+        status: false,
+      },
+    });
+    return {
+      status: 'success',
+      publication,
+    };
   }
 }

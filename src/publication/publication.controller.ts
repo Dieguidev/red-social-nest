@@ -55,7 +55,8 @@ export class PublicationController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Auth(ValidRoles.user, ValidRoles.admin)
+  remove(@Param('id', IdValidationPipe) id: string) {
     return this.publicationService.remove(+id);
   }
 }
