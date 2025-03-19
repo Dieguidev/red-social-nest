@@ -34,6 +34,11 @@ export class PublicationService {
     if (!publication) {
       throw new NotFoundException('Publication not found');
     }
+
+    if (!publication.status) {
+      throw new NotFoundException('Publication not found');
+    }
+
     return {
       status: 'success',
       publication,
